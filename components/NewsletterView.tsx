@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
-import { Loop, Member, CollationMode } from '../types.ts';
-import { generateNewsletterIntro, generateHeaderImage, generateNarrativeCollation } from '../services/geminiService.ts';
-import { MemberAvatar } from './MemberAvatar.tsx';
+import { Loop, Member, CollationMode } from '../types';
+import { generateNewsletterIntro, generateHeaderImage, generateNarrativeCollation } from '../services/geminiService';
+import { MemberAvatar } from './MemberAvatar';
 
 interface NewsletterViewProps {
   loop: Loop;
