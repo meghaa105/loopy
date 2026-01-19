@@ -1,20 +1,23 @@
 
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
   "headers": [
     {
-      "source": "/(.*).ts",
+      "source": "/(.*)\\.ts",
       "headers": [
         { "key": "Content-Type", "value": "application/javascript" }
       ]
     },
     {
-      "source": "/(.*).tsx",
+      "source": "/(.*)\\.tsx",
       "headers": [
         { "key": "Content-Type", "value": "application/javascript" }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/((?!.*\\.).*)",
+      "destination": "/index.html"
     }
   ]
 }
