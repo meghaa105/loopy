@@ -71,7 +71,7 @@ const PublicRespondView: React.FC<PublicRespondViewProps> = ({ loop, onSubmit, o
               <select 
                 value={selectedMemberId}
                 onChange={e => setSelectedMemberId(e.target.value)}
-                className="w-full p-6 text-xl font-black neo-brutal bg-white outline-none cursor-pointer hover:bg-stone-50 transition-colors"
+                className="w-full p-6 text-xl font-black neo-brutal bg-white outline-none cursor-pointer hover:bg-stone-50 transition-colors text-stone-900"
               >
                 <option value="">WHO ARE YOU?</option>
                 {loop.members.map(m => (
@@ -89,7 +89,7 @@ const PublicRespondView: React.FC<PublicRespondViewProps> = ({ loop, onSubmit, o
                 <textarea 
                   value={answers[q.id] || ''}
                   onChange={e => handleAnswerChange(q.id, e.target.value)}
-                  className="w-full p-8 neo-brutal bg-stone-50 outline-none min-h-[180px] text-2xl serif italic placeholder:text-stone-300 focus:bg-white transition-all"
+                  className="w-full p-8 neo-brutal bg-stone-50 outline-none min-h-[180px] text-2xl serif italic placeholder:text-stone-300 focus:bg-white transition-all text-stone-900"
                   placeholder="Type your response here..."
                 />
               </section>
