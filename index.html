@@ -10,9 +10,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Essential Shims for Gemini SDK -->
     <script>
-        window.process = { env: { NODE_ENV: 'production', API_KEY: '' } };
+        // Critical shim for Gemini SDK and other Node-centric libraries
+        window.process = { 
+            env: { 
+                NODE_ENV: 'production',
+                API_KEY: '' 
+            } 
+        };
     </script>
     
     <style>
@@ -57,10 +62,10 @@
 </script>
 
     <!-- 
-      The esm.sh/run script automatically handles transpilation of 
-      imported .tsx files when loaded as a module script.
+      The esm.sh/run loader transpiles TSX files on the fly.
+      We specify the entry point using the 'main' query parameter.
     -->
-    <script type="module" src="https://esm.sh/run"></script>
+    <script type="module" src="https://esm.sh/run?main=./index.tsx"></script>
 </head>
 <body>
     <div id="root"></div>
