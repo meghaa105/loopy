@@ -1,6 +1,7 @@
 
-import React, { useState } from 'react';
-import { Loop, Member } from '../types.ts';
+import React from 'react';
+import { Loop } from '../types.ts';
+import { MemberAvatar } from './MemberAvatar.tsx';
 
 interface DashboardProps {
   loops: Loop[];
@@ -8,53 +9,6 @@ interface DashboardProps {
   onEdit: (id: string) => void;
   onCreate: () => void;
 }
-
-const FALLBACK_COLORS = [
-  'bg-amber-200 text-amber-900',
-  'bg-violet-200 text-violet-900',
-  'bg-emerald-200 text-emerald-900',
-  'bg-rose-200 text-rose-900',
-  'bg-sky-200 text-sky-900',
-  'bg-orange-200 text-orange-900',
-];
-
-const getInitials = (name: string) => {
-  const parts = name.trim().split(' ');
-  if (parts.length >= 2) {
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  }
-  return name.slice(0, 2).toUpperCase();
-};
-
-const getColorClass = (name: string) => {
-  const hash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  return FALLBACK_COLORS[hash % FALLBACK_COLORS.length];
-};
-
-const MemberAvatar: React.FC<{ member: Member }> = ({ member }) => {
-  const [imgError, setImgError] = useState(false);
-
-  if (!member.avatar || imgError) {
-    return (
-      <div 
-        className={`w-12 h-12 rounded-full border-2 border-black flex items-center justify-center text-xs font-black transition-all shadow-[2px_2px_0px_0px_#000] group-hover:shadow-[4px_4px_0px_0px_#000] ${getColorClass(member.name)}`}
-        title={member.name}
-      >
-        {getInitials(member.name)}
-      </div>
-    );
-  }
-
-  return (
-    <img 
-      src={member.avatar} 
-      onError={() => setImgError(true)}
-      className="w-12 h-12 rounded-full border-2 border-black grayscale group-hover:grayscale-0 transition-all shadow-[2px_2px_0px_0px_#000] group-hover:shadow-[4px_4px_0px_0px_#000] object-cover bg-white" 
-      title={member.name}
-      alt={member.name}
-    />
-  );
-};
 
 const Dashboard: React.FC<DashboardProps> = ({ loops, onSelect, onEdit, onCreate }) => {
   return (
@@ -113,7 +67,7 @@ const Dashboard: React.FC<DashboardProps> = ({ loops, onSelect, onEdit, onCreate
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center -space-x-4">
                     {loop.members.slice(0, 4).map(member => (
-                      <MemberAvatar key={member.id} member={member} />
+                      <MemberAvatar key={member.id} member={member} className="group-hover:grayscale-0 grayscale" />
                     ))}
                     {loop.members.length > 4 && (
                       <div className="w-12 h-12 rounded-full bg-white border-2 border-black flex items-center justify-center text-[10px] font-black shadow-[2px_2px_0px_0px_#000] z-10">

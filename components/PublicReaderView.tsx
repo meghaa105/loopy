@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Loop } from '../types';
+import { Loop, Member } from '../types.ts';
+import { MemberAvatar } from './MemberAvatar.tsx';
 
 interface PublicReaderViewProps {
   loop: Loop;
@@ -9,7 +10,7 @@ interface PublicReaderViewProps {
 
 const PublicReaderView: React.FC<PublicReaderViewProps> = ({ loop, onBackToApp }) => {
   const getResponsesByQuestion = () => {
-    const map: Record<string, { q: string, r: { name: string, avatar: string, text: string }[] }> = {};
+    const map: Record<string, { q: string, r: { member: Member, text: string }[] }> = {};
     loop.questions.forEach(q => {
       map[q.id] = { q: q.text, r: [] };
     });
@@ -17,7 +18,7 @@ const PublicReaderView: React.FC<PublicReaderViewProps> = ({ loop, onBackToApp }
       if (map[r.questionId]) {
         const member = loop.members.find(m => m.id === r.memberId);
         if (member) {
-          map[r.questionId].r.push({ name: member.name, avatar: member.avatar, text: r.answer });
+          map[r.questionId].r.push({ member, text: r.answer });
         }
       }
     });
@@ -34,88 +35,92 @@ const PublicReaderView: React.FC<PublicReaderViewProps> = ({ loop, onBackToApp }
           onClick={onBackToApp} 
           className="bg-black text-white px-6 py-3 neo-brutal text-[10px] font-black uppercase tracking-[0.2em]"
         >
-          &larr; Return to Dashboard
+          &larr; Return to App
         </button>
       </nav>
 
       <div className="max-w-5xl mx-auto px-6">
         <div className="bg-white neo-brutal-static overflow-hidden">
           {/* Magazine Cover */}
-          <div className="relative h-[650px] border-b-2 border-black">
+          <div className="relative h-[750px] border-b-4 border-black">
             {loop.headerImage ? (
-              <img src={loop.headerImage} className="w-full h-full object-cover" alt="Header" />
+              <img src={loop.headerImage} className="w-full h-full object-cover grayscale" alt="Header" />
             ) : (
-              <div className="w-full h-full bg-violet-100" />
+              <div className="w-full h-full bg-stone-100" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+            
+            <div className="absolute top-12 left-12 right-12 flex justify-between items-start">
+               <div className="bg-yellow-300 text-black px-4 py-2 neo-brutal rotate-[-2deg] font-black text-xs uppercase tracking-[0.3em]">Issue #001</div>
+               <div className="bg-white text-black px-4 py-2 neo-brutal rotate-[2deg] font-black text-[10px] uppercase tracking-widest">{loop.category}</div>
+            </div>
+
             <div className="absolute bottom-16 left-12 right-12 text-white">
-              <div className="flex items-center gap-4 mb-8">
-                 <div className="px-3 py-1 bg-yellow-300 text-black font-black text-[10px] uppercase tracking-widest border-2 border-black">
-                    Issue 01 // Collective Memory
-                 </div>
-              </div>
-              <h1 className="text-7xl md:text-[9rem] serif font-black leading-[0.8] tracking-tighter mb-8 break-words uppercase">
+              <h1 className="text-[12vw] md:text-[8rem] serif font-black leading-[0.7] tracking-tighter mb-12 break-words uppercase">
                 {loop.name}
               </h1>
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <p className="text-2xl italic serif opacity-90 max-w-sm leading-tight">
-                  {loop.lastGeneratedAt ? new Date(loop.lastGeneratedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Curated Just Now'}
-                </p>
-                <div className="flex -space-x-4 border-2 border-white rounded-full p-1 bg-white/10 backdrop-blur-sm">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
+                <div className="space-y-4">
+                  <p className="text-2xl italic serif opacity-90 max-w-sm leading-tight">
+                    {loop.lastGeneratedAt ? new Date(loop.lastGeneratedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Vol 01'}
+                  </p>
+                  <div className="h-1 w-24 bg-white" />
+                </div>
+                <div className="flex -space-x-5">
                   {loop.members.map(m => (
-                    <img key={m.id} src={m.avatar} className="w-12 h-12 rounded-full border-2 border-black bg-stone-100" />
+                    <MemberAvatar key={m.id} member={m} size="md" className="ring-4 ring-black" />
                   ))}
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="p-12 md:p-32 space-y-48">
+          <div className="p-12 md:p-32 space-y-64">
             {/* Intro Editor Note */}
             <div className="max-w-3xl relative">
-              <div className="mb-8 px-4 py-1 bg-black text-white text-[10px] font-black uppercase tracking-widest inline-block">
-                Editor's Letter
+              <div className="mb-12 inline-block">
+                <span className="text-7xl absolute -top-12 -left-12 opacity-20">✍️</span>
+                <span className="bg-black text-white px-6 py-2 text-[10px] font-black uppercase tracking-[0.5em] neo-brutal rotate-1">Editor's Letter</span>
               </div>
-              <p className="text-4xl md:text-5xl text-stone-900 leading-[1.2] italic serif font-medium first-letter:text-8xl first-letter:font-black first-letter:float-left first-letter:mr-4 first-letter:leading-[0.8] first-letter:text-violet-600">
-                {loop.introText || "Every circle has its own gravity. Here's a look at what pulled us together this week."}
+              <p className="text-4xl md:text-5xl text-black leading-[1.2] italic serif font-medium first-letter:text-9xl first-letter:font-black first-letter:float-left first-letter:mr-4 first-letter:leading-none first-letter:text-violet-600">
+                {loop.introText || "Life moves fast. This is our pause button."}
               </p>
-              <div className="mt-12 w-24 h-1 bg-violet-600" />
             </div>
 
             {loop.collationMode === 'ai' && loop.narrativeText ? (
               <div className="max-w-4xl mx-auto">
-                 <div className="px-4 py-1 bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase tracking-[0.4em] mb-12 inline-block">
-                    The Week in Review
+                 <div className="px-6 py-2 bg-emerald-100 border-2 border-black text-black text-[10px] font-black uppercase tracking-[0.5em] mb-16 inline-block rotate-[-1deg]">
+                    The Collective Story
                  </div>
-                 <div className="text-3xl md:text-4xl text-stone-800 leading-relaxed font-serif whitespace-pre-wrap">
+                 <div className="text-3xl md:text-4xl text-stone-900 leading-[1.5] font-serif whitespace-pre-wrap space-y-12">
                    {loop.narrativeText}
                  </div>
               </div>
             ) : (
               /* Questions/Responses Grid (Verbatim) */
-              <div className="space-y-48">
+              <div className="space-y-64">
                 {groupedResponses.map((item, idx) => (
                   <div key={idx} className="relative">
-                    <div className="flex items-start gap-8 mb-20 border-b-2 border-black pb-8">
-                      <span className="text-[10px] font-black text-stone-300 pt-4 tracking-[0.5em] uppercase">Q_{String(idx+1).padStart(2, '0')}</span>
-                      <h3 className="text-4xl md:text-6xl serif font-black text-black leading-tight max-w-3xl">
+                    <div className="flex flex-col md:flex-row md:items-end gap-6 mb-24 border-b-4 border-black pb-8">
+                      <span className="text-[10px] font-black text-stone-300 tracking-[1em] uppercase pb-2">PROMPT_{String(idx+1).padStart(2, '0')}</span>
+                      <h3 className="text-5xl md:text-7xl serif font-black text-black leading-[0.9] tracking-tighter uppercase italic">
                         {item.q}
                       </h3>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-32">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-24">
                       {item.r.map((resp, ridx) => (
-                        <div key={ridx} className={`space-y-8 relative ${ridx % 2 === 0 ? 'md:translate-y-12' : ''}`}>
-                          <div className="flex items-center gap-5">
-                            <img src={resp.avatar} className="w-16 h-16 rounded-full border-2 border-black neo-brutal-static" />
-                            <div>
-                              <span className="text-[10px] font-black text-black uppercase tracking-[0.2em]">{resp.name}</span>
-                              <div className="h-0.5 w-12 bg-black/20" />
-                            </div>
+                        <div key={ridx} className={`p-12 neo-brutal-static bg-white space-y-8 relative ${ridx % 2 === 0 ? 'rotate-[-0.5deg]' : 'rotate-[0.5deg] md:translate-y-12'}`}>
+                          <div className="flex items-center gap-4">
+                            <MemberAvatar member={resp.member} size="sm" />
+                            <span className="text-[10px] font-black text-black uppercase tracking-widest">{resp.member.name}</span>
                           </div>
-                          <p className="text-2xl md:text-3xl text-stone-800 leading-[1.4] font-medium italic serif tracking-tight">
+                          <p className="text-2xl md:text-3xl text-stone-900 leading-[1.4] font-medium italic serif tracking-tight">
                             "{resp.text}"
                           </p>
+                          <div className="absolute top-4 right-4 text-stone-100 text-5xl font-black select-none pointer-events-none">
+                            {ridx + 1}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -124,17 +129,31 @@ const PublicReaderView: React.FC<PublicReaderViewProps> = ({ loop, onBackToApp }
               </div>
             )}
             
-            <div className="text-center pt-24 border-t-2 border-black">
-               <p className="text-black font-black uppercase tracking-[0.5em] text-xs">Stay Curious. End of Issue.</p>
-               <div className="mt-12 flex justify-center gap-2">
-                 {[...Array(3)].map((_, i) => (
-                   <div key={i} className="w-2 h-2 bg-violet-600 rounded-full" />
+            <div className="text-center pt-32 border-t-4 border-black">
+               <div className="text-7xl mb-12 sticker animate-spin-slow">🌀</div>
+               <p className="text-black font-black uppercase tracking-[1em] text-[10px] mb-8">FIN // VOLUME 01</p>
+               <div className="flex justify-center gap-4">
+                 {[...Array(5)].map((_, i) => (
+                   <div key={i} className="w-3 h-3 bg-black neo-brutal rounded-full" />
                  ))}
+               </div>
+               <div className="mt-24 text-[8px] font-black uppercase text-stone-400 tracking-[0.5em]">
+                 Created with Loopy // AI Curation Engine
                </div>
             </div>
           </div>
         </div>
       </div>
+      
+      <style>{`
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+          animation: spin-slow 12s linear infinite;
+        }
+      `}</style>
     </div>
   );
 };

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Loop, Member, CollationMode } from '../types.ts';
 import { generateNewsletterIntro, generateHeaderImage, generateNarrativeCollation } from '../services/geminiService.ts';
+import { MemberAvatar } from './MemberAvatar.tsx';
 
 interface NewsletterViewProps {
   loop: Loop;
@@ -77,7 +78,7 @@ const NewsletterView: React.FC<NewsletterViewProps> = ({ loop, onUpdate, onBack 
   };
 
   const getResponsesByQuestion = () => {
-    const map: Record<string, { q: string, r: { name: string, avatar: string, text: string }[] }> = {};
+    const map: Record<string, { q: string, r: { member: Member, text: string }[] }> = {};
     loop.questions.forEach(q => {
       map[q.id] = { q: q.text, r: [] };
     });
@@ -86,8 +87,7 @@ const NewsletterView: React.FC<NewsletterViewProps> = ({ loop, onUpdate, onBack 
         const member = loop.members.find(m => m.id === r.memberId);
         if (member) {
           map[r.questionId].r.push({ 
-            name: member.name, 
-            avatar: member.avatar, 
+            member,
             text: r.answer 
           });
         }
@@ -101,36 +101,30 @@ const NewsletterView: React.FC<NewsletterViewProps> = ({ loop, onUpdate, onBack 
   return (
     <div className="max-w-5xl mx-auto pb-20 relative">
       {showPublishSuccess && (
-        <div className="fixed top-8 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-8 py-4 rounded-full shadow-2xl z-50 animate-bounce flex items-center gap-3">
+        <div className="fixed top-8 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-8 py-4 neo-brutal z-50 animate-bounce flex items-center gap-3">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
-          Delivered! Everyone has been notified via email.
+          Delivered! Everyone has been notified.
         </div>
       )}
 
       {showCopySuccess && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-stone-900 text-white px-6 py-3 rounded-full shadow-2xl z-50 flex items-center gap-3">
-          {showCopySuccess === 'read' ? 'Edition Link' : 'Response Link'} copied to clipboard!
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-black text-white px-6 py-3 neo-brutal z-50 flex items-center gap-3">
+          {showCopySuccess === 'read' ? 'Edition Link' : 'Response Link'} copied!
         </div>
       )}
 
       {isPublishing && publishProgress && (
         <div className="fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
-          <div className="bg-white p-12 rounded-[3rem] shadow-2xl max-w-sm w-full text-center space-y-8">
-            <div className="relative w-24 h-24 mx-auto">
-              <div className="absolute inset-0 border-4 border-stone-100 rounded-full" />
-              <div 
-                className="absolute inset-0 border-4 border-amber-500 rounded-full border-t-transparent animate-spin transition-all" 
-                style={{ clipPath: `inset(0 0 0 ${100 - (publishProgress.current/publishProgress.total)*100}%)` }}
-              />
-              <div className="absolute inset-0 flex items-center justify-center font-bold text-stone-900">
-                {Math.round((publishProgress.current / publishProgress.total) * 100)}%
-              </div>
-            </div>
+          <div className="bg-white p-12 neo-brutal-static max-w-sm w-full text-center space-y-8">
+            <div className="text-5xl animate-bounce">💌</div>
             <div>
-              <h3 className="text-2xl font-bold text-stone-900 mb-2">Sending Edition</h3>
-              <p className="text-stone-500">Delivering to <span className="text-stone-900 font-bold">{publishProgress.memberName}</span>...</p>
+              <h3 className="text-2xl font-black text-black mb-2 uppercase tracking-tight">Mailing out...</h3>
+              <p className="text-stone-500 font-bold uppercase text-[10px] tracking-widest">To: {publishProgress.memberName}</p>
+            </div>
+            <div className="w-full h-4 bg-stone-100 border-2 border-black">
+              <div className="h-full bg-yellow-300 transition-all duration-300 border-r-2 border-black" style={{ width: `${(publishProgress.current/publishProgress.total)*100}%` }} />
             </div>
           </div>
         </div>
@@ -138,85 +132,77 @@ const NewsletterView: React.FC<NewsletterViewProps> = ({ loop, onUpdate, onBack 
 
       <div className="mb-12 flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="flex flex-col">
-          <button onClick={onBack} className="text-stone-400 hover:text-stone-800 flex items-center gap-2 text-sm font-bold mb-2 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to Dashboard
+          <button onClick={onBack} className="text-black hover:underline flex items-center gap-2 text-[10px] font-black uppercase tracking-widest mb-4 transition-all">
+            &larr; Exit to Dashboard
           </button>
           <div className="flex gap-4 items-center">
-             <h1 className="text-3xl serif font-bold text-stone-900">{loop.name}</h1>
-             <span className="text-[10px] uppercase tracking-widest font-black text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-100">
-               {loop.frequency} Loop
+             <h1 className="text-4xl serif font-black text-black">{loop.name}</h1>
+             <span className="text-[10px] uppercase tracking-widest font-black text-white bg-black px-3 py-1">
+               {loop.frequency}
              </span>
           </div>
         </div>
         
-        <div className="flex items-center gap-2 bg-white shadow-sm border border-stone-100 p-1.5 rounded-2xl">
+        <div className="flex items-center gap-2 bg-white neo-brutal-static p-1">
           <button 
             onClick={() => setViewMode('preview')}
-            className={`px-6 py-2.5 rounded-xl text-xs font-bold transition-all ${viewMode === 'preview' ? 'bg-stone-900 text-white shadow-lg' : 'text-stone-400 hover:text-stone-600'}`}
+            className={`px-6 py-2 text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'preview' ? 'bg-black text-white' : 'text-stone-400'}`}
           >
             Digital Edition
           </button>
           <button 
             onClick={() => setViewMode('responses')}
-            className={`px-6 py-2.5 rounded-xl text-xs font-bold transition-all ${viewMode === 'responses' ? 'bg-stone-900 text-white shadow-lg' : 'text-stone-400 hover:text-stone-600'}`}
+            className={`px-6 py-2 text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'responses' ? 'bg-black text-white' : 'text-stone-400'}`}
           >
-            Responses ({loop.responses.length})
+            Submissions ({loop.responses.length})
           </button>
         </div>
       </div>
 
       {viewMode === 'preview' ? (
         <div className="space-y-8">
-          {/* Collation Options Switcher */}
           <div className="flex justify-center mb-8">
-            <div className="bg-white p-2 neo-brutal-static flex gap-2">
+            <div className="bg-white p-2 neo-brutal-static flex gap-2 rotate-[-1deg]">
               <button 
                 onClick={() => handleModeToggle('ai')}
-                className={`px-8 py-3 text-xs font-black uppercase tracking-widest transition-all ${loop.collationMode === 'ai' ? 'bg-black text-white' : 'text-stone-400 hover:bg-stone-50'}`}
+                className={`px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center gap-2 ${loop.collationMode === 'ai' ? 'bg-violet-400 text-black' : 'text-stone-400'}`}
               >
                 ✨ AI Story
               </button>
               <button 
                 onClick={() => handleModeToggle('verbatim')}
-                className={`px-8 py-3 text-xs font-black uppercase tracking-widest transition-all ${loop.collationMode === 'verbatim' ? 'bg-black text-white' : 'text-stone-400 hover:bg-stone-50'}`}
+                className={`px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center gap-2 ${loop.collationMode === 'verbatim' ? 'bg-emerald-400 text-black' : 'text-stone-400'}`}
               >
                 📝 Verbatim
               </button>
             </div>
           </div>
 
-          <div className="bg-white shadow-2xl rounded-[4rem] overflow-hidden border border-stone-100">
-            <div className="relative h-[550px]">
+          <div className="bg-white neo-brutal-static overflow-hidden">
+            <div className="relative h-[550px] border-b-2 border-black">
               {loop.headerImage ? (
-                <img src={loop.headerImage} className="w-full h-full object-cover" alt="Header" />
+                <img src={loop.headerImage} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" alt="Header" />
               ) : (
                 <div className="w-full h-full bg-stone-100 flex flex-col items-center justify-center gap-4 group cursor-pointer" onClick={handleGenerate}>
-                  <div className="p-8 bg-white rounded-full shadow-sm group-hover:scale-110 transition-transform">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <p className="text-stone-400 font-bold uppercase tracking-widest text-xs">Tap to Generate AI Artwork</p>
+                  <div className="text-7xl group-hover:scale-110 transition-transform sticker">🎨</div>
+                  <p className="text-black font-black uppercase tracking-widest text-[10px]">Tap to Curate Issue 01</p>
                 </div>
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-900/20 to-transparent" />
-              <div className="absolute bottom-16 left-16 right-16 text-white">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+              <div className="absolute bottom-16 left-12 right-12 text-white">
                 <div className="flex items-center gap-4 mb-6">
-                   <div className="h-0.5 w-16 bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.5)]" />
-                   <span className="text-xs uppercase tracking-[0.5em] font-black opacity-90">Private Collective Edition</span>
+                   <div className="h-0.5 w-16 bg-yellow-300" />
+                   <span className="text-[10px] uppercase tracking-[0.4em] font-black">Private Collective // {loop.category}</span>
                 </div>
-                <h1 className="text-7xl serif font-bold mb-8 leading-[1.1]">{loop.name}</h1>
+                <h1 className="text-7xl serif font-black mb-8 leading-[0.9] tracking-tighter break-words uppercase">{loop.name}</h1>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-8">
-                    <p className="text-white/70 font-medium tracking-wide">
-                      {loop.lastGeneratedAt ? new Date(loop.lastGeneratedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'PENDING CURATION'}
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em]">
+                      {loop.lastGeneratedAt ? new Date(loop.lastGeneratedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'PENDING'}
                     </p>
-                    <div className="flex -space-x-4">
+                    <div className="flex -space-x-3">
                       {loop.members.slice(0, 5).map(m => (
-                        <img key={m.id} src={m.avatar} className="w-10 h-10 rounded-full border-2 border-stone-900 shadow-xl" title={m.name} />
+                        <MemberAvatar key={m.id} member={m} size="sm" className="ring-2 ring-black" />
                       ))}
                     </div>
                   </div>
@@ -224,58 +210,54 @@ const NewsletterView: React.FC<NewsletterViewProps> = ({ loop, onUpdate, onBack 
               </div>
             </div>
 
-            <div className="p-16 md:p-32">
-              <div className="max-w-3xl mb-24 relative">
-                <span className="text-amber-500/10 font-serif text-[20rem] absolute -top-40 -left-20 select-none">“</span>
-                <p className="text-3xl text-stone-800 leading-[1.6] italic serif relative z-10 first-letter:text-7xl first-letter:font-bold first-letter:mr-2 first-letter:float-left first-letter:text-amber-600">
-                  {loop.introText || "Once you curate the edition, Gemini will weave everyone's replies into a cohesive introduction."}
+            <div className="p-12 md:p-24">
+              {/* Common Intro Section */}
+              <div className="max-w-3xl mb-32 relative">
+                <div className="text-[10px] font-black uppercase tracking-[0.4em] mb-8 bg-black text-white px-4 py-1 inline-block rotate-[-1deg]">The Editor's Take</div>
+                <p className="text-3xl text-black leading-[1.3] italic serif first-letter:text-8xl first-letter:font-black first-letter:mr-4 first-letter:float-left first-letter:text-violet-600 first-letter:leading-none">
+                  {loop.introText || "Curate the zine to generate a beautiful AI-powered intro."}
                 </p>
               </div>
 
               {loop.collationMode === 'ai' ? (
                 <div className="max-w-4xl mx-auto py-12">
-                   <div className="prose prose-stone lg:prose-2xl">
-                     {loop.narrativeText ? (
-                       <div className="text-stone-700 leading-relaxed font-serif space-y-6 text-2xl whitespace-pre-wrap">
-                         {loop.narrativeText}
-                       </div>
-                     ) : (
-                       <div className="text-center py-20 border-2 border-dashed border-stone-200 rounded-3xl">
-                         <p className="text-stone-400 italic">Curate the collation to see the story.</p>
-                       </div>
-                     )}
-                   </div>
+                   {loop.narrativeText ? (
+                     <div className="text-2xl text-stone-800 leading-relaxed font-serif space-y-12 whitespace-pre-wrap first-letter:text-6xl first-letter:font-black first-letter:float-left first-letter:mr-4">
+                       {loop.narrativeText}
+                     </div>
+                   ) : (
+                     <div className="text-center py-32 border-4 border-dashed border-stone-200">
+                       <p className="text-stone-400 italic font-bold uppercase text-[10px] tracking-widest">Story pending generation...</p>
+                       <button onClick={handleGenerate} className="mt-8 bg-yellow-300 px-8 py-4 neo-brutal font-black uppercase text-xs">Summon AI Story &rarr;</button>
+                     </div>
+                   )}
                 </div>
               ) : (
                 <div className="space-y-48">
                   {groupedResponses.length === 0 ? (
-                    <div className="text-center py-32 bg-stone-50/50 rounded-[3rem] border-2 border-dashed border-stone-100 flex flex-col items-center">
-                      <p className="text-stone-400 italic text-xl max-w-sm font-serif">No responses collected yet.</p>
-                      <button 
-                        onClick={() => copyLink('respond')}
-                        className="mt-8 text-amber-600 font-bold flex items-center gap-2"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1" />
-                        </svg>
-                        Copy Response Link
-                      </button>
+                    <div className="text-center py-32 bg-stone-50 neo-brutal-static flex flex-col items-center">
+                      <div className="text-5xl mb-6 sticker">🌵</div>
+                      <p className="text-black font-black uppercase tracking-widest text-xs">No responses found in this loop.</p>
+                      <button onClick={() => copyLink('respond')} className="mt-8 bg-emerald-300 px-8 py-4 neo-brutal font-black uppercase text-xs">Request Vibes &rarr;</button>
                     </div>
                   ) : (
                     groupedResponses.map((item, idx) => (
-                      <div key={idx}>
-                        <h3 className="text-5xl serif font-bold text-stone-900 mb-20 leading-[1.2] max-w-3xl">
-                          {item.q}
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-24 gap-y-24">
+                      <div key={idx} className="relative">
+                        <div className="flex items-center gap-6 mb-16 border-b-4 border-black pb-4">
+                          <span className="text-[10px] font-black text-stone-300">#{idx+1}</span>
+                          <h3 className="text-4xl md:text-5xl serif font-black text-black leading-tight tracking-tighter uppercase">
+                            {item.q}
+                          </h3>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                           {item.r.map((resp, ridx) => (
-                            <div key={ridx} className="space-y-8">
-                              <div className="flex items-center gap-5">
-                                <img src={resp.avatar} className="w-14 h-14 rounded-full ring-8 ring-stone-50" />
-                                <span className="text-sm font-black text-stone-900 uppercase tracking-widest">{resp.name}</span>
+                            <div key={ridx} className={`p-10 neo-brutal-static bg-white space-y-6 ${ridx % 2 === 0 ? 'rotate-[-0.5deg]' : 'rotate-[0.5deg]'}`}>
+                              <div className="flex items-center gap-4">
+                                <MemberAvatar member={resp.member} size="sm" />
+                                <span className="text-[10px] font-black text-black uppercase tracking-widest">{resp.member.name}</span>
                               </div>
-                              <p className="text-2xl text-stone-600 leading-relaxed font-light serif">
-                                {resp.text}
+                              <p className="text-xl text-stone-700 leading-relaxed font-serif italic">
+                                "{resp.text}"
                               </p>
                             </div>
                           ))}
@@ -286,47 +268,37 @@ const NewsletterView: React.FC<NewsletterViewProps> = ({ loop, onUpdate, onBack 
                 </div>
               )}
 
-              <div className="mt-60 pt-24 border-t border-stone-100 text-center">
+              <div className="mt-60 pt-24 border-t-4 border-black text-center">
                 <div className="flex flex-col items-center gap-10">
                    {!loop.lastGeneratedAt ? (
                       <button 
                         onClick={handleGenerate}
                         disabled={isGenerating}
-                        className="bg-stone-950 text-white px-16 py-6 rounded-full font-black text-xl hover:bg-stone-800 transition-all shadow-xl disabled:opacity-50 flex items-center gap-4"
+                        className="bg-black text-white px-16 py-8 neo-brutal font-black text-2xl uppercase tracking-[0.2em] disabled:opacity-50"
                       >
-                        {isGenerating ? 'AI Curating...' : 'Generate Collation'}
+                        {isGenerating ? 'AI BRAINSTORMING...' : 'PUBLISH ZINE &rarr;'}
                       </button>
                    ) : (
-                      <div className="flex flex-col items-center gap-6">
-                        <div className="flex gap-4">
+                      <div className="flex flex-col items-center gap-8">
+                        <div className="flex flex-wrap justify-center gap-6">
                           <button 
                             onClick={handleGenerate}
                             disabled={isGenerating}
-                            className="bg-white border-2 border-black text-black px-12 py-5 rounded-full font-black text-xl hover:bg-stone-50 transition-all"
+                            className="bg-white text-black px-12 py-5 neo-brutal font-black text-xs uppercase tracking-widest disabled:opacity-50"
                           >
-                             {isGenerating ? 'Refreshing...' : 'Refresh AI Collation'}
+                             {isGenerating ? 'Refreshing...' : '✨ Re-Curate AI'}
                           </button>
                           <button 
                             onClick={handlePublish}
                             disabled={isPublishing}
-                            className="bg-amber-600 text-white px-16 py-5 rounded-full font-black text-xl hover:bg-amber-700 shadow-xl flex items-center gap-4"
+                            className="bg-emerald-400 text-black px-12 py-5 neo-brutal font-black text-xs uppercase tracking-widest"
                           >
-                             {isPublishing ? 'Delivering...' : 'Send to Members'}
+                             {isPublishing ? 'Delivering...' : '📤 Send Issue 01'}
                           </button>
                         </div>
-                        <div className="flex gap-6">
-                          <button 
-                            onClick={() => copyLink('read')}
-                            className="flex items-center gap-2 text-stone-400 hover:text-stone-900 font-bold"
-                          >
-                            Copy Reader Link
-                          </button>
-                          <button 
-                            onClick={() => copyLink('respond')}
-                            className="flex items-center gap-2 text-stone-400 hover:text-stone-900 font-bold"
-                          >
-                            Copy Response Link
-                          </button>
+                        <div className="flex gap-8">
+                          <button onClick={() => copyLink('read')} className="text-[10px] font-black uppercase tracking-widest hover:underline">📋 Reader Link</button>
+                          <button onClick={() => copyLink('respond')} className="text-[10px] font-black uppercase tracking-widest hover:underline">📋 Submit Link</button>
                         </div>
                       </div>
                    )}
@@ -336,30 +308,31 @@ const NewsletterView: React.FC<NewsletterViewProps> = ({ loop, onUpdate, onBack 
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-[3rem] border border-stone-200 shadow-xl overflow-hidden">
-          <div className="p-12 bg-stone-50/50 border-b border-stone-100 flex justify-between items-center">
-             <h2 className="text-3xl font-bold text-stone-900">Submission Inbox</h2>
-             <button onClick={() => copyLink('respond')} className="bg-amber-600 text-white px-6 py-2 rounded-full text-xs font-bold">Copy Link for Members</button>
+        <div className="bg-white neo-brutal-static overflow-hidden">
+          <div className="p-12 bg-yellow-50 border-b-2 border-black flex justify-between items-center">
+             <h2 className="text-3xl serif font-black text-black">Submissions Inbox</h2>
+             <button onClick={() => copyLink('respond')} className="bg-black text-white px-6 py-2 neo-brutal text-[10px] font-black uppercase tracking-widest">Share Invite</button>
           </div>
-          <div className="p-12 space-y-8">
+          <div className="p-12 space-y-12">
             {loop.responses.length === 0 ? (
-               <div className="text-center py-20 flex flex-col items-center text-stone-300">
-                 <p className="text-stone-400 font-serif text-xl">The inbox is currently empty.</p>
+               <div className="text-center py-20 border-2 border-dashed border-stone-200">
+                 <p className="text-stone-400 font-black uppercase text-[10px] tracking-widest">Awaiting first submission...</p>
                </div>
             ) : (
               loop.responses.map(resp => {
                 const member = loop.members.find(m => m.id === resp.memberId);
                 const question = loop.questions.find(q => q.id === resp.questionId);
                 return (
-                  <div key={resp.id} className="p-8 bg-white rounded-3xl border border-stone-100 shadow-sm">
-                    <div className="flex items-center gap-4 mb-6">
-                      <img src={member?.avatar} className="w-12 h-12 rounded-full" />
-                      <p className="font-bold text-stone-900 text-lg leading-none">{member?.name}</p>
+                  <div key={resp.id} className="p-10 neo-brutal-static bg-white group hover:translate-x-1 transition-all">
+                    <div className="flex items-center gap-4 mb-8">
+                      {member && <MemberAvatar member={member} size="sm" />}
+                      <p className="font-black text-black uppercase tracking-widest text-[10px]">{member?.name}</p>
                     </div>
                     <div className="space-y-4">
-                       <p className="text-stone-900 font-bold text-xl leading-tight">{question?.text}</p>
-                       <p className="text-stone-600 text-lg leading-relaxed bg-stone-50/50 p-6 rounded-2xl font-serif italic">
-                         "{resp.answer}"
+                       <p className="text-black font-black text-xl leading-tight italic">"{question?.text}"</p>
+                       <div className="h-0.5 w-12 bg-black/10" />
+                       <p className="text-stone-600 text-lg leading-relaxed font-serif">
+                         {resp.answer}
                        </p>
                     </div>
                   </div>
