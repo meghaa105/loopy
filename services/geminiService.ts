@@ -1,8 +1,7 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { Question, Loop, Response, Member } from "../types";
+import { Question, Loop, Response, Member } from "../types.ts";
 
-// Always initialize GoogleGenAI with the API key from process.env.API_KEY directly.
 const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const suggestQuestions = async (category: string, description: string, existingQuestions: string[]): Promise<string[]> => {
@@ -33,7 +32,6 @@ export const suggestQuestions = async (category: string, description: string, ex
   });
 
   try {
-    // response.text is a property that returns the generated text.
     const data = JSON.parse(response.text || '{}');
     return data.questions || [];
   } catch (e) {
@@ -76,7 +74,6 @@ export const generateHeaderImage = async (prompt: string): Promise<string> => {
     }
   });
 
-  // Find the image part in the response parts.
   for (const part of response.candidates?.[0]?.content?.parts || []) {
     if (part.inlineData) {
       return `data:image/png;base64,${part.inlineData.data}`;

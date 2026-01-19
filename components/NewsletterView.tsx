@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { Loop, Member } from '../types';
-import { generateNewsletterIntro, generateHeaderImage } from '../services/geminiService';
+import { Loop, Member } from '../types.ts';
+import { generateNewsletterIntro, generateHeaderImage } from '../services/geminiService.ts';
 
 interface NewsletterViewProps {
   loop: Loop;
@@ -90,7 +90,6 @@ const NewsletterView: React.FC<NewsletterViewProps> = ({ loop, onUpdate, onBack 
 
   return (
     <div className="max-w-5xl mx-auto pb-20 relative">
-      {/* Notifications */}
       {showPublishSuccess && (
         <div className="fixed top-8 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-8 py-4 rounded-full shadow-2xl z-50 animate-bounce flex items-center gap-3">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -106,7 +105,6 @@ const NewsletterView: React.FC<NewsletterViewProps> = ({ loop, onUpdate, onBack 
         </div>
       )}
 
-      {/* Sending Progress Overlay */}
       {isPublishing && publishProgress && (
         <div className="fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
           <div className="bg-white p-12 rounded-[3rem] shadow-2xl max-w-sm w-full text-center space-y-8">
@@ -163,7 +161,6 @@ const NewsletterView: React.FC<NewsletterViewProps> = ({ loop, onUpdate, onBack 
       {viewMode === 'preview' ? (
         <div className="space-y-8">
           <div className="bg-white shadow-2xl rounded-[4rem] overflow-hidden border border-stone-100">
-            {/* Magazine Header */}
             <div className="relative h-[550px]">
               {loop.headerImage ? (
                 <img src={loop.headerImage} className="w-full h-full object-cover" alt="Header" />

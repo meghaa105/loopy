@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Loop } from '../types';
+import { Loop } from '../types.ts';
 
 interface DashboardProps {
   loops: Loop[];
