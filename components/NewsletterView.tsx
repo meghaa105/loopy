@@ -30,13 +30,22 @@ const NewsletterView: React.FC<NewsletterViewProps> = ({ loop, onUpdate, onBack 
       
       onUpdate({
         ...loop,
-        introText: intro,
-        headerImage: header,
-        narrativeText: narrative,
+        introText: intro || "Curate the zine to generate a beautiful AI-powered intro.",
+        headerImage: header || 'https://via.placeholder.com/1200x400?text=Newsletter+Header',
+        narrativeText: narrative || "No narrative generated. Add responses to the questions.",
         lastGeneratedAt: new Date().toISOString()
       });
     } catch (e) {
-      console.error(e);
+      console.error("Generation failed:", e);
+      alert("Failed to generate content. Please check your API key and try again.");
+      // Still set a timestamp so user can proceed
+      onUpdate({
+        ...loop,
+        introText: "Curate the zine to generate a beautiful AI-powered intro.",
+        headerImage: 'https://via.placeholder.com/1200x400?text=Newsletter+Header',
+        narrativeText: "Generation failed. Please ensure members have submitted responses.",
+        lastGeneratedAt: new Date().toISOString()
+      });
     } finally {
       setIsGenerating(false);
     }
@@ -202,13 +211,15 @@ const NewsletterView: React.FC<NewsletterViewProps> = ({ loop, onUpdate, onBack 
             <div className="bg-white p-2 neo-brutal-static flex gap-2 rotate-[-1deg]">
               <button 
                 onClick={() => handleModeToggle('ai')}
-                className={`px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center gap-2 ${loop.collationMode === 'ai' ? 'bg-violet-400 text-black' : 'text-stone-400'}`}
+                disabled={isGenerating}
+                className={`px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center gap-2 disabled:opacity-50 ${loop.collationMode === 'ai' ? 'bg-violet-400 text-black' : 'text-stone-400 hover:text-black'}`}
               >
                 ✨ AI Story
               </button>
               <button 
                 onClick={() => handleModeToggle('verbatim')}
-                className={`px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center gap-2 ${loop.collationMode === 'verbatim' ? 'bg-emerald-400 text-black' : 'text-stone-400'}`}
+                disabled={isGenerating}
+                className={`px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center gap-2 disabled:opacity-50 ${loop.collationMode === 'verbatim' ? 'bg-emerald-400 text-black' : 'text-stone-400 hover:text-black'}`}
               >
                 📝 Verbatim
               </button>
@@ -220,10 +231,14 @@ const NewsletterView: React.FC<NewsletterViewProps> = ({ loop, onUpdate, onBack 
               {loop.headerImage ? (
                 <img src={loop.headerImage} className="w-full h-full object-cover grayscale" alt="Header" />
               ) : (
-                <div className="w-full h-full bg-stone-100 flex flex-col items-center justify-center gap-4 group cursor-pointer" onClick={handleGenerate}>
-                  <div className="text-7xl group-hover:scale-110 transition-transform sticker">🎨</div>
-                  <p className="text-black font-black uppercase tracking-widest text-[10px]">Tap to Curate Next Issue</p>
-                </div>
+                <button 
+                  onClick={handleGenerate}
+                  disabled={isGenerating}
+                  className="w-full h-full bg-stone-100 hover:bg-stone-200 disabled:opacity-50 flex flex-col items-center justify-center gap-4 transition-colors cursor-pointer"
+                >
+                  <div className="text-7xl transition-transform">{isGenerating ? '⏳' : '🎨'}</div>
+                  <p className="text-black font-black uppercase tracking-widest text-[10px]">{isGenerating ? 'Generating...' : 'Tap to Curate Next Issue'}</p>
+                </button>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
               <div className="absolute bottom-16 left-12 right-12 text-white">
@@ -277,7 +292,7 @@ const NewsletterView: React.FC<NewsletterViewProps> = ({ loop, onUpdate, onBack 
                     disabled={isPublishing || !loop.lastGeneratedAt}
                     className="bg-emerald-400 text-black px-16 py-8 neo-brutal font-black text-2xl uppercase tracking-[0.2em] disabled:opacity-50"
                   >
-                    {isPublishing ? 'SENDING...' : 'PUBLISH & ARCHIVE &rarr;'}
+                    {isPublishing ? 'SENDING...' : 'Send & Archive'}
                   </button>
               </div>
             </div>
