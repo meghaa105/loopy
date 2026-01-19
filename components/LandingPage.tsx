@@ -8,63 +8,58 @@ interface LandingPageProps {
 
 const LandingPage: React.FC<LandingPageProps> = ({ onStart, onExample }) => {
   return (
-    <div className="relative min-h-screen bg-[#fcfbf7] overflow-hidden">
-      {/* Decorative blobs */}
-      <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-amber-50 rounded-full blur-3xl opacity-50" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-indigo-50 rounded-full blur-3xl opacity-50" />
+    <div className="relative min-h-screen flex flex-col items-center px-6 pt-20 pb-32">
+      {/* Background Shapes */}
+      <div className="absolute top-20 left-10 w-32 h-32 bg-yellow-300 rounded-full neo-brutal-static -rotate-12 hidden md:block" />
+      <div className="absolute top-40 right-10 w-40 h-12 bg-violet-400 neo-brutal-static rotate-6 hidden md:block" />
+      <div className="absolute bottom-40 left-20 w-24 h-24 bg-emerald-300 neo-brutal-static rotate-12 hidden md:block" />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 pt-32 pb-24 text-center">
-        <h1 className="text-6xl md:text-8xl serif font-bold text-stone-900 mb-8 leading-tight">
-          The private <br />
-          <span className="italic text-amber-700">newsletter</span> for<br />
-          your inner circle.
+      <div className="relative z-10 max-w-4xl w-full text-center">
+        <div className="inline-block px-4 py-1 bg-black text-white text-[10px] font-black uppercase tracking-[0.3em] mb-8 rotate-1">
+          The Anti-Social-Media
+        </div>
+        
+        <h1 className="text-6xl md:text-[7rem] serif font-black leading-[0.9] tracking-tight mb-10">
+          Capture the <br />
+          <span className="italic text-violet-600">vibe</span> of <br />
+          the group.
         </h1>
-        <p className="text-xl md:text-2xl text-stone-600 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
-          Reconnect with the people who matter most. Scribe uses AI to help you ask better questions and weaves your group's responses into beautiful weekly stories.
+        
+        <p className="text-xl md:text-2xl font-medium text-stone-800 mb-12 max-w-2xl mx-auto leading-relaxed">
+          Scribe is a private digital zine for your circle. AI curates your random thoughts, late-night takes, and weekly peaks into a stunning shared memory.
         </p>
-        <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button 
             onClick={onStart}
-            className="px-10 py-5 bg-stone-900 text-white rounded-full text-lg font-semibold hover:bg-stone-800 transition-all transform hover:scale-105 shadow-xl"
+            className="w-full sm:w-auto px-12 py-6 bg-yellow-300 text-black text-xl font-black neo-brutal uppercase tracking-wider"
           >
-            Start your Scribe
+            Create My Loop
           </button>
           <button 
             onClick={onExample}
-            className="px-10 py-5 bg-white text-stone-800 rounded-full text-lg font-medium border border-stone-200 hover:bg-stone-50 transition-all"
+            className="w-full sm:w-auto px-12 py-6 bg-white text-black text-xl font-black neo-brutal uppercase tracking-wider"
           >
-            See an example
+            Show me a Zine
           </button>
         </div>
+      </div>
 
-        <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-12 text-left">
-          <div className="glass p-8 rounded-3xl">
-            <div className="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center mb-6 text-amber-600">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold text-stone-800 mb-3">Meaningful Questions</h3>
-            <p className="text-stone-600 leading-relaxed">AI suggests deep, engaging questions that spark real conversation beyond "how was your day?"</p>
-          </div>
-          <div className="glass p-8 rounded-3xl">
-            <div className="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center mb-6 text-indigo-600">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold text-stone-800 mb-3">Beautiful Stories</h3>
-            <p className="text-stone-600 leading-relaxed">Every week, Scribe curates responses into a magazine-quality digital layout for everyone to read.</p>
-          </div>
-          <div className="glass p-8 rounded-3xl">
-            <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center mb-6 text-emerald-600">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold text-stone-800 mb-3">Completely Private</h3>
-            <p className="text-stone-600 leading-relaxed">No ads, no public profiles, no feeds. Just a safe space for your family and closest friends.</p>
-          </div>
+      <div className="mt-32 w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="bg-white p-10 neo-brutal-static rotate-[-1deg]">
+          <div className="text-4xl mb-6 sticker">📸</div>
+          <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">Zero algorithm.</h3>
+          <p className="font-medium text-stone-600 leading-snug">Just your people. No ads, no scrolling, no likes. Just real life delivered once a week.</p>
+        </div>
+        <div className="bg-emerald-100 p-10 neo-brutal-static rotate-[1deg]">
+          <div className="text-4xl mb-6 sticker">✨</div>
+          <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">AI Curator.</h3>
+          <p className="font-medium text-stone-700 leading-snug">Gemini writes the intros, designs the covers, and collates the chaos into a masterpiece.</p>
+        </div>
+        <div className="bg-violet-100 p-10 neo-brutal-static rotate-[-1deg]">
+          <div className="text-4xl mb-6 sticker">💌</div>
+          <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">Inbox Gold.</h3>
+          <p className="font-medium text-stone-700 leading-snug">Stop texting in the void. Build a weekly habit that feels like getting a physical letter.</p>
         </div>
       </div>
     </div>

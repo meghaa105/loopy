@@ -27,52 +27,84 @@ const PublicReaderView: React.FC<PublicReaderViewProps> = ({ loop, onBackToApp }
   const groupedResponses = getResponsesByQuestion();
 
   return (
-    <div className="min-h-screen bg-stone-50 pb-20">
-      <nav className="max-w-5xl mx-auto px-6 py-8 flex justify-between items-center">
-        <div className="text-2xl serif font-bold text-stone-900">Scribe<span className="text-amber-600">.</span></div>
-        <button onClick={onBackToApp} className="text-xs font-bold text-stone-400 hover:text-stone-900 uppercase tracking-widest transition-colors">Return to Dashboard</button>
+    <div className="min-h-screen pb-32">
+      <nav className="max-w-6xl mx-auto px-6 py-12 flex justify-between items-center">
+        <div className="text-4xl serif font-black tracking-tighter">Scribe<span className="text-violet-600">.</span></div>
+        <button 
+          onClick={onBackToApp} 
+          className="bg-black text-white px-6 py-3 neo-brutal text-[10px] font-black uppercase tracking-[0.2em]"
+        >
+          &larr; Return to Dashboard
+        </button>
       </nav>
 
-      <div className="max-w-4xl mx-auto px-6">
-        <div className="bg-white shadow-2xl rounded-[3rem] overflow-hidden border border-stone-100">
-          <div className="relative h-[450px]">
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="bg-white neo-brutal-static overflow-hidden">
+          {/* Magazine Cover */}
+          <div className="relative h-[650px] border-b-2 border-black">
             {loop.headerImage ? (
               <img src={loop.headerImage} className="w-full h-full object-cover" alt="Header" />
             ) : (
-              <div className="w-full h-full bg-stone-200 animate-pulse" />
+              <div className="w-full h-full bg-violet-100" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-transparent to-transparent" />
-            <div className="absolute bottom-12 left-12 right-12 text-white">
-              <h1 className="text-5xl serif font-bold mb-4">{loop.name}</h1>
-              <p className="text-white/80 italic font-serif">
-                {loop.lastGeneratedAt ? new Date(loop.lastGeneratedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Recent Edition'}
-              </p>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+            <div className="absolute bottom-16 left-12 right-12 text-white">
+              <div className="flex items-center gap-4 mb-8">
+                 <div className="px-3 py-1 bg-yellow-300 text-black font-black text-[10px] uppercase tracking-widest border-2 border-black">
+                    Issue 01 // Collective Memory
+                 </div>
+              </div>
+              <h1 className="text-7xl md:text-[9rem] serif font-black leading-[0.8] tracking-tighter mb-8 break-words uppercase">
+                {loop.name}
+              </h1>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <p className="text-2xl italic serif opacity-90 max-w-sm leading-tight">
+                  {loop.lastGeneratedAt ? new Date(loop.lastGeneratedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Curated Just Now'}
+                </p>
+                <div className="flex -space-x-4 border-2 border-white rounded-full p-1 bg-white/10 backdrop-blur-sm">
+                  {loop.members.map(m => (
+                    <img key={m.id} src={m.avatar} className="w-12 h-12 rounded-full border-2 border-black bg-stone-100" />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="p-12 md:p-24 space-y-32">
-            <div className="max-w-2xl relative">
-              <span className="text-amber-500/10 font-serif text-[15rem] absolute -top-32 -left-12 select-none">“</span>
-              <p className="text-2xl text-stone-700 leading-relaxed italic serif relative z-10">
-                {loop.introText || "Welcome to our circle. Here's a look at what everyone's been up to."}
+          <div className="p-12 md:p-32 space-y-48">
+            {/* Intro Editor Note */}
+            <div className="max-w-3xl relative">
+              <div className="mb-8 px-4 py-1 bg-black text-white text-[10px] font-black uppercase tracking-widest inline-block">
+                Editor's Letter
+              </div>
+              <p className="text-4xl md:text-5xl text-stone-900 leading-[1.2] italic serif font-medium first-letter:text-8xl first-letter:font-black first-letter:float-left first-letter:mr-4 first-letter:leading-[0.8] first-letter:text-violet-600">
+                {loop.introText || "Every circle has its own gravity. Here's a look at what pulled us together this week."}
               </p>
+              <div className="mt-12 w-24 h-1 bg-violet-600" />
             </div>
 
-            <div className="space-y-32">
+            {/* Questions/Responses Grid */}
+            <div className="space-y-48">
               {groupedResponses.map((item, idx) => (
-                <div key={idx}>
-                  <h3 className="text-3xl serif font-bold text-stone-900 mb-12 border-b border-stone-100 pb-6">
-                    {item.q}
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+                <div key={idx} className="relative">
+                  <div className="flex items-start gap-8 mb-20 border-b-2 border-black pb-8">
+                    <span className="text-[10px] font-black text-stone-300 pt-4 tracking-[0.5em] uppercase">Q_{String(idx+1).padStart(2, '0')}</span>
+                    <h3 className="text-4xl md:text-6xl serif font-black text-black leading-tight max-w-3xl">
+                      {item.q}
+                    </h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-32">
                     {item.r.map((resp, ridx) => (
-                      <div key={ridx} className="space-y-4">
-                        <div className="flex items-center gap-3">
-                          <img src={resp.avatar} className="w-10 h-10 rounded-full" />
-                          <span className="text-sm font-black text-stone-900 uppercase tracking-widest">{resp.name}</span>
+                      <div key={ridx} className={`space-y-8 relative ${ridx % 2 === 0 ? 'md:translate-y-12' : ''}`}>
+                        <div className="flex items-center gap-5">
+                          <img src={resp.avatar} className="w-16 h-16 rounded-full border-2 border-black neo-brutal-static" />
+                          <div>
+                            <span className="text-[10px] font-black text-black uppercase tracking-[0.2em]">{resp.name}</span>
+                            <div className="h-0.5 w-12 bg-black/20" />
+                          </div>
                         </div>
-                        <p className="text-lg text-stone-600 leading-relaxed font-serif">
-                          {resp.text}
+                        <p className="text-2xl md:text-3xl text-stone-800 leading-[1.4] font-medium italic serif tracking-tight">
+                          "{resp.text}"
                         </p>
                       </div>
                     ))}
@@ -81,8 +113,13 @@ const PublicReaderView: React.FC<PublicReaderViewProps> = ({ loop, onBackToApp }
               ))}
             </div>
             
-            <div className="text-center pt-20">
-               <p className="text-stone-300 font-bold uppercase tracking-[0.4em] text-[10px]">End of Edition</p>
+            <div className="text-center pt-24 border-t-2 border-black">
+               <p className="text-black font-black uppercase tracking-[0.5em] text-xs">Stay Curious. End of Issue.</p>
+               <div className="mt-12 flex justify-center gap-2">
+                 {[...Array(3)].map((_, i) => (
+                   <div key={i} className="w-2 h-2 bg-violet-600 rounded-full" />
+                 ))}
+               </div>
             </div>
           </div>
         </div>
