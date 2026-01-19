@@ -41,7 +41,7 @@ const INITIAL_LOOPS: Loop[] = [
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>('landing');
   const [loops, setLoops] = useState<Loop[]>(() => {
-    const saved = localStorage.getItem('scribe_loops');
+    const saved = localStorage.getItem('loopy_loops');
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -81,7 +81,7 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('scribe_loops', JSON.stringify(loops));
+    localStorage.setItem('loopy_loops', JSON.stringify(loops));
   }, [loops]);
 
   const activeLoop = loops.find(l => l.id === activeLoopId);
@@ -137,7 +137,7 @@ const App: React.FC = () => {
               onClick={() => { setView('dashboard'); window.location.hash = ''; }}
               className="text-3xl serif font-bold text-stone-800 tracking-tight"
             >
-              Scribe<span className="text-amber-600">.</span>
+              Loopy<span className="text-amber-600">.</span>
             </button>
             <div className="flex gap-4">
               <button 

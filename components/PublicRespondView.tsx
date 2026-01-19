@@ -57,7 +57,7 @@ const PublicRespondView: React.FC<PublicRespondViewProps> = ({ loop, onSubmit, o
     <div className="min-h-screen bg-yellow-50 py-20 px-6">
       <div className="max-w-3xl mx-auto">
         <div className="mb-20 text-center">
-          <div className="text-5xl serif font-black text-black mb-4 tracking-tighter uppercase italic">Scribe Submission</div>
+          <div className="text-5xl serif font-black text-black mb-4 tracking-tighter uppercase italic">Loopy Submission</div>
           <div className="h-1 w-32 bg-black mx-auto" />
         </div>
 

@@ -29,7 +29,7 @@ const PublicReaderView: React.FC<PublicReaderViewProps> = ({ loop, onBackToApp }
   return (
     <div className="min-h-screen pb-32">
       <nav className="max-w-6xl mx-auto px-6 py-12 flex justify-between items-center">
-        <div className="text-4xl serif font-black tracking-tighter">Scribe<span className="text-violet-600">.</span></div>
+        <div className="text-4xl serif font-black tracking-tighter">Loopy<span className="text-violet-600">.</span></div>
         <button 
           onClick={onBackToApp} 
           className="bg-black text-white px-6 py-3 neo-brutal text-[10px] font-black uppercase tracking-[0.2em]"

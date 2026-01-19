@@ -26,7 +26,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onExample }) => {
         </h1>
         
         <p className="text-xl md:text-2xl font-medium text-stone-800 mb-12 max-w-2xl mx-auto leading-relaxed">
-          Scribe is a private digital zine for your circle. AI curates your random thoughts, late-night takes, and weekly peaks into a stunning shared memory.
+          Loopy is a private digital zine for your circle. AI curates your random thoughts, late-night takes, and weekly peaks into a stunning shared memory.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
