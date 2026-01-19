@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { Loop, Member } from '../types.ts';
-import { generateNewsletterIntro, generateHeaderImage } from '../services/geminiService.ts';
+import { Loop, Member } from '../types';
+import { generateNewsletterIntro, generateHeaderImage } from '../services/geminiService';
 
 interface NewsletterViewProps {
   loop: Loop;
