@@ -133,8 +133,8 @@ const App: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 py-8">
           <nav className="flex items-center justify-between mb-12">
             <button 
-              onClick={() => { setView('dashboard'); window.location.hash = ''; }}
-              className="text-3xl serif font-bold text-stone-800 tracking-tight"
+              onClick={() => { setView('landing'); window.location.hash = ''; }}
+              className="text-3xl serif font-bold text-stone-800 tracking-tight hover:opacity-80 transition-opacity"
             >
               Loopy<span className="text-amber-600">.</span>
             </button>
@@ -182,14 +182,14 @@ const App: React.FC = () => {
       )}
 
       {view === 'public-read' && activeLoop && (
-        <PublicReaderView loop={activeLoop} onBackToApp={() => { setView('dashboard'); window.location.hash = ''; }} />
+        <PublicReaderView loop={activeLoop} onBackToApp={() => { setView('landing'); window.location.hash = ''; }} />
       )}
 
       {view === 'public-respond' && activeLoop && (
         <PublicRespondView 
           loop={activeLoop} 
           onSubmit={(resp) => handleAddResponse(activeLoop.id, resp)}
-          onBackToApp={() => { setView('dashboard'); window.location.hash = ''; }} 
+          onBackToApp={() => { setView('landing'); window.location.hash = ''; }} 
         />
       )}
     </div>
