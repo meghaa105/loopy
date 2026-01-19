@@ -5,38 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scribe - Private Group Newsletters</title>
-
-    <!-- Essential Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Twind Setup (Production-ready Tailwind-in-JS) -->
-    <script type="module">
-      import { setup, tw } from 'https://esm.sh/twind@0.16.19';
-      setup({
+    <!-- Tailwind Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
         theme: {
           extend: {
             fontFamily: {
               sans: ['Plus Jakarta Sans', 'sans-serif'],
               serif: ['Fraunces', 'serif'],
             },
-            colors: {
-              brand: {
-                yellow: '#fde047',
-                violet: '#a78bfa',
-                emerald: '#34d399',
-                paper: '#f4f1ea'
-              }
-            }
           }
         }
-      });
-      window.tw = tw;
+      }
     </script>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <script>
-        // Critical shim for Gemini SDK and Node-centric libraries
+        // Critical shim for Gemini SDK and other Node-centric libraries
         window.process = { 
             env: { 
                 NODE_ENV: 'production',
@@ -50,24 +40,9 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #f4f1ea;
             color: #1a1a1a;
-            position: relative;
-            min-height: 100vh;
+            background-image: url("https://www.transparenttextures.com/patterns/silver-lined.png");
         }
-
-        /* Editorial Paper Grain Effect */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0.04;
-            pointer-events: none;
-            z-index: 9999;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-
         .serif { font-family: 'Fraunces', serif; }
-
-        /* Tactile Neo-Brutalist Components */
         .neo-brutal {
             border: 2px solid #000;
             box-shadow: 4px 4px 0px 0px #000;
@@ -85,13 +60,7 @@
             border: 2px solid #000;
             box-shadow: 4px 4px 0px 0px #000;
         }
-        
-        /* Smooth Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f4f1ea; }
-        ::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 10px; }
-
-        .sticker { filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff); }
+        .sticker { filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff); }
     </style>
 
     <script type="importmap">
@@ -107,7 +76,10 @@
 }
 </script>
 
-    <!-- Correct Loader: No-export syntax avoids the 'run' export error -->
+    <!-- 
+      The esm.sh/run loader transpiles TSX files on the fly.
+      We specify the entry point using the 'main' query parameter.
+    -->
     <script type="module" src="https://esm.sh/run?main=./index.tsx"></script>
 </head>
 <body>
