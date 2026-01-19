@@ -36,19 +36,27 @@ const LoopEditor: React.FC<LoopEditorProps> = ({ loop, onSave, onCancel, onDelet
 
   const handleAddQuestion = () => {
     if (!newQuestionText.trim()) return;
-    setQuestions([...questions, { id: Date.now().toString(), text: newQuestionText }]);
+    setQuestions([...questions, { id: Date.now().toString(), text: newQuestionText.trim() }]);
     setNewQuestionText('');
   };
 
   const handleAddMember = () => {
     if (!newMemberName.trim() || !newMemberEmail.trim()) return;
+    
+    // Check for potential duplicate emails
+    if (members.some(m => m.email.toLowerCase() === newMemberEmail.trim().toLowerCase())) {
+        alert("This person is already in your circle!");
+        return;
+    }
+
     const newMember: Member = {
       id: Date.now().toString(),
-      name: newMemberName,
-      email: newMemberEmail,
-      avatar: `https://i.pravatar.cc/150?u=${newMemberEmail}`
+      name: newMemberName.trim(),
+      email: newMemberEmail.trim(),
+      avatar: `https://i.pravatar.cc/150?u=${newMemberEmail.trim()}`
     };
-    setMembers([...members, newMember]);
+    
+    setMembers(prev => [...prev, newMember]);
     setNewMemberName('');
     setNewMemberEmail('');
   };
@@ -72,6 +80,10 @@ const LoopEditor: React.FC<LoopEditorProps> = ({ loop, onSave, onCancel, onDelet
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (members.length === 0) {
+        alert("You need at least one person in your circle!");
+        return;
+    }
     const result: Loop = {
       id: loop?.id || Date.now().toString(),
       name,
@@ -94,6 +106,7 @@ const LoopEditor: React.FC<LoopEditorProps> = ({ loop, onSave, onCancel, onDelet
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-6">
         <div>
           <button 
+            type="button"
             onClick={onCancel}
             className="bg-black text-white px-5 py-2 neo-brutal text-[10px] font-black uppercase tracking-widest mb-6"
           >
@@ -103,6 +116,7 @@ const LoopEditor: React.FC<LoopEditorProps> = ({ loop, onSave, onCancel, onDelet
         </div>
         {loop && onDelete && (
           <button 
+            type="button"
             onClick={() => { if(confirm('Nuke everything?')) onDelete(loop.id) }}
             className="text-red-600 text-xs font-black uppercase tracking-[0.3em] hover:bg-red-50 px-4 py-2 border-2 border-black transition-all"
           >
@@ -200,22 +214,28 @@ const LoopEditor: React.FC<LoopEditorProps> = ({ loop, onSave, onCancel, onDelet
             <h3 className="text-xs uppercase tracking-[0.4em] font-black text-stone-300">The Circle ({members.length})</h3>
             <div className="space-y-6">
               <div className="max-h-[350px] overflow-y-auto pr-2 space-y-4 scrollbar-hide">
-                {members.map(member => (
-                  <div key={member.id} className="flex items-center gap-4 p-4 neo-brutal bg-violet-50 group">
-                    <img src={member.avatar} className="w-12 h-12 rounded-full border-2 border-black grayscale group-hover:grayscale-0 transition-all" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-black text-black uppercase tracking-tighter truncate">{member.name}</p>
-                      <p className="text-[9px] text-stone-400 font-bold lowercase truncate">{member.email}</p>
-                    </div>
-                    <button 
-                      type="button"
-                      onClick={() => handleRemoveMember(member.id)}
-                      className="p-2 text-red-500 hover:scale-125 transition-all"
-                    >
-                      &times;
-                    </button>
+                {members.length === 0 ? (
+                  <div className="p-10 text-center border-2 border-dashed border-stone-200 rounded-xl bg-stone-50">
+                    <p className="text-xs font-bold text-stone-400 uppercase tracking-widest">No members in the circle yet.</p>
                   </div>
-                ))}
+                ) : (
+                  members.map(member => (
+                    <div key={member.id} className="flex items-center gap-4 p-4 neo-brutal bg-violet-50 group hover:bg-white transition-colors">
+                      <img src={member.avatar} className="w-12 h-12 rounded-full border-2 border-black grayscale group-hover:grayscale-0 transition-all" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-black text-black uppercase tracking-tighter truncate">{member.name}</p>
+                        <p className="text-[9px] text-stone-400 font-bold lowercase truncate">{member.email}</p>
+                      </div>
+                      <button 
+                        type="button"
+                        onClick={() => handleRemoveMember(member.id)}
+                        className="p-2 text-red-500 hover:scale-125 transition-all text-xl font-black"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))
+                )}
               </div>
 
               <div className="pt-8 border-t-2 border-black space-y-4">
@@ -223,16 +243,18 @@ const LoopEditor: React.FC<LoopEditorProps> = ({ loop, onSave, onCancel, onDelet
                   type="text" 
                   value={newMemberName}
                   onChange={e => setNewMemberName(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddMember())}
                   className="w-full px-6 py-4 neo-brutal text-sm font-black uppercase tracking-widest outline-none placeholder:text-stone-300"
-                  placeholder="NEW NAME"
+                  placeholder="NEW MEMBER NAME"
                 />
                 <div className="flex gap-4">
                   <input 
                     type="email" 
                     value={newMemberEmail}
                     onChange={e => setNewMemberEmail(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddMember())}
                     className="flex-1 px-6 py-4 neo-brutal text-sm font-black outline-none placeholder:text-stone-300"
-                    placeholder="EMAIL"
+                    placeholder="EMAIL ADDRESS"
                   />
                   <button 
                     type="button"
@@ -265,7 +287,7 @@ const LoopEditor: React.FC<LoopEditorProps> = ({ loop, onSave, onCancel, onDelet
                   <div key={q.id} className="group flex gap-5 bg-stone-50 p-6 neo-brutal-static border-2 border-black">
                     <span className="text-[10px] font-black text-violet-400">/{idx+1}</span>
                     <span className="text-sm text-black font-bold italic leading-snug flex-1">{q.text}</span>
-                    <button type="button" onClick={() => handleRemoveQuestion(q.id)} className="text-red-500 font-black">&times;</button>
+                    <button type="button" onClick={() => handleRemoveQuestion(q.id)} className="text-red-500 font-black text-xl">&times;</button>
                   </div>
                 ))}
               </div>
@@ -294,7 +316,7 @@ const LoopEditor: React.FC<LoopEditorProps> = ({ loop, onSave, onCancel, onDelet
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 w-full max-w-sm px-6">
           <button 
             type="submit"
-            className="w-full bg-black text-white py-8 neo-brutal font-black text-2xl uppercase tracking-[0.2em] group"
+            className="w-full bg-black text-white py-8 neo-brutal font-black text-2xl uppercase tracking-[0.2em] group shadow-2xl"
           >
             <span className="group-hover:tracking-[0.4em] transition-all">Save Zine &rarr;</span>
           </button>

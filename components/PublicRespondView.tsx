@@ -37,7 +37,7 @@ const PublicRespondView: React.FC<PublicRespondViewProps> = ({ loop, onSubmit, o
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-violet-100 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-violet-100 flex flex-col items-center justify-center p-6">
         <div className="max-w-md w-full bg-white p-16 neo-brutal-static text-center rotate-1">
           <div className="text-7xl mb-10 sticker">✨</div>
           <h2 className="text-4xl serif font-black text-black mb-4">You're in the Zine!</h2>
@@ -49,19 +49,31 @@ const PublicRespondView: React.FC<PublicRespondViewProps> = ({ loop, onSubmit, o
             Go Back
           </button>
         </div>
+        
+        {/* Attribution on success screen too */}
+        <div className="mt-8 bg-white px-3 py-1 neo-brutal rotate-1 flex items-center gap-2">
+          <span className="text-[8px] font-black uppercase tracking-widest text-black">Hand-crafted by</span>
+          <span className="text-xs font-black text-emerald-600 serif italic">Megha</span>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-yellow-50 py-20 px-6">
-      <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen bg-yellow-50 py-20 px-6 flex flex-col items-center">
+      <div className="max-w-3xl w-full mx-auto">
         <div className="mb-20 text-center">
           <div className="text-5xl serif font-black text-black mb-4 tracking-tighter uppercase italic">Loopy Submission</div>
           <div className="h-1 w-32 bg-black mx-auto" />
         </div>
 
-        <div className="bg-white neo-brutal-static p-10 md:p-20">
+        <div className="bg-white neo-brutal-static p-10 md:p-20 relative">
+          {/* Quirky Floating Badge */}
+          <div className="absolute -top-4 -right-4 bg-yellow-300 px-3 py-1 neo-brutal rotate-6 hidden md:flex items-center gap-2 z-10">
+            <span className="text-[8px] font-black uppercase text-black">Built by</span>
+            <span className="text-xs font-black text-black serif italic">Megha</span>
+          </div>
+
           <h1 className="text-5xl serif font-black text-black mb-6 leading-[0.9]">What's the <br /><span className="text-violet-600 italic">frequency</span>?</h1>
           <p className="text-stone-500 font-bold mb-16 uppercase tracking-widest text-[10px]">Collective: {loop.name}</p>
 
@@ -103,6 +115,13 @@ const PublicRespondView: React.FC<PublicRespondViewProps> = ({ loop, onSubmit, o
               <span className="group-hover:tracking-[0.2em] transition-all">Publish Response &rarr;</span>
             </button>
           </div>
+        </div>
+
+        {/* Attribution for Mobile/Bottom */}
+        <div className="mt-12 text-center">
+           <div className="inline-flex items-center gap-2 text-[10px] font-bold text-stone-400 uppercase tracking-widest">
+             Made with ✨ & Gemini by <span className="text-black font-black underline decoration-violet-400 underline-offset-4">Megha</span>
+           </div>
         </div>
       </div>
     </div>

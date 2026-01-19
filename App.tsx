@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { Loop, ViewState, Member, Response } from './types';
-import Dashboard from './components/Dashboard';
-import LoopEditor from './components/LoopEditor';
-import NewsletterView from './components/NewsletterView';
-import LandingPage from './components/LandingPage';
-import PublicReaderView from './components/PublicReaderView';
-import PublicRespondView from './components/PublicRespondView';
+import { Loop, ViewState, Member, Response } from './types.ts';
+import Dashboard from './components/Dashboard.tsx';
+import LoopEditor from './components/LoopEditor.tsx';
+import NewsletterView from './components/NewsletterView.tsx';
+import LandingPage from './components/LandingPage.tsx';
+import PublicReaderView from './components/PublicReaderView.tsx';
+import PublicRespondView from './components/PublicRespondView.tsx';
 
 const INITIAL_MEMBERS: Member[] = [
   { id: '1', name: 'Alex Rivera', email: 'alex@example.com', avatar: 'https://i.pravatar.cc/150?u=alex' },

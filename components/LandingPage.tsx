@@ -62,6 +62,15 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onExample }) => {
           <p className="font-medium text-stone-700 leading-snug">Stop texting in the void. Build a weekly habit that feels like getting a physical letter.</p>
         </div>
       </div>
+
+      {/* Quirky Attribution */}
+      <div className="mt-24 relative">
+        <div className="absolute -top-6 -left-10 text-2xl sticker rotate-[-15deg]">🦋</div>
+        <div className="bg-white px-4 py-2 neo-brutal rotate-[-2deg] flex items-center gap-2">
+          <span className="text-[10px] font-black uppercase tracking-widest text-black">Created by</span>
+          <span className="text-sm font-black text-violet-600 serif italic">Megha</span>
+        </div>
+      </div>
     </div>
   );
 };
