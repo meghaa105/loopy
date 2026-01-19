@@ -1,7 +1,5 @@
 {
   "name": "Scribe - Intelligent Private Newsletters",
   "description": "A sophisticated group newsletter platform that uses Gemini AI to suggest questions, summarize responses into beautiful stories, and generate custom header art for your private circles.",
-  "requestFramePermissions": [
-    "camera"
-  ]
+  "requestFramePermissions": []
 }
