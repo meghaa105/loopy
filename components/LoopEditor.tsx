@@ -132,6 +132,7 @@ const LoopEditor: React.FC<LoopEditorProps> = ({ loop, onSave, onCancel, onDelet
         return;
     }
 
+    // Fixed: Added missing 'editions' property to satisfy the Loop interface requirement.
     const result: Loop = {
       id: loop?.id || Math.random().toString(36).substring(2, 11),
       name,
@@ -141,6 +142,7 @@ const LoopEditor: React.FC<LoopEditorProps> = ({ loop, onSave, onCancel, onDelet
       questions,
       members: currentMembers,
       responses: loop?.responses || [],
+      editions: loop?.editions || [],
       collationMode,
       lastGeneratedAt: loop?.lastGeneratedAt,
       headerImage: loop?.headerImage,

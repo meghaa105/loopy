@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { Loop, ViewState, Member, Response } from './types';
-import Dashboard from './components/Dashboard';
-import LoopEditor from './components/LoopEditor';
-import NewsletterView from './components/NewsletterView';
-import LandingPage from './components/LandingPage';
-import PublicReaderView from './components/PublicReaderView';
-import PublicRespondView from './components/PublicRespondView';
+import { Loop, ViewState, Member, Response, Edition } from './types.ts';
+import Dashboard from './components/Dashboard.tsx';
+import LoopEditor from './components/LoopEditor.tsx';
+import NewsletterView from './components/NewsletterView.tsx';
+import LandingPage from './components/LandingPage.tsx';
+import PublicReaderView from './components/PublicReaderView.tsx';
+import PublicRespondView from './components/PublicRespondView.tsx';
 
 const INITIAL_MEMBERS: Member[] = [
   { id: '1', name: 'Alex Rivera', email: 'alex@example.com', avatar: 'https://i.pravatar.cc/150?u=alex' },
@@ -31,6 +31,7 @@ const INITIAL_LOOPS: Loop[] = [
       { id: 'r2', memberId: '2', questionId: 'q1', answer: 'Found a hidden gem of a coffee shop in downtown.' },
       { id: 'r3', memberId: '3', questionId: 'q2', answer: 'Started watching "The Bear". It is intense but great.' }
     ],
+    editions: [],
     collationMode: 'verbatim',
     lastGeneratedAt: new Date().toISOString(),
     headerImage: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=1200',
@@ -46,8 +47,11 @@ const App: React.FC = () => {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Ensure collationMode exists for migration
-        return parsed.map((l: Loop) => ({ ...l, collationMode: l.collationMode || 'verbatim' }));
+        return parsed.map((l: Loop) => ({ 
+          ...l, 
+          collationMode: l.collationMode || 'verbatim',
+          editions: l.editions || []
+        }));
       } catch (e) {
         return INITIAL_LOOPS;
       }
@@ -56,13 +60,10 @@ const App: React.FC = () => {
   });
   const [activeLoopId, setActiveLoopId] = useState<string | null>(null);
 
-  // Handle Hash Routing
   useEffect(() => {
     const handleRoute = () => {
       const hash = window.location.hash;
-      if (!hash) {
-        return;
-      }
+      if (!hash) return;
 
       const parts = hash.split('/');
       if (parts[1] === 'loop' && parts[2]) {
@@ -91,7 +92,7 @@ const App: React.FC = () => {
       if (exists) {
         return prev.map(l => l.id === loop.id ? loop : l);
       }
-      return [...prev, { ...loop, collationMode: loop.collationMode || 'verbatim' }];
+      return [...prev, { ...loop, editions: loop.editions || [] }];
     });
     setActiveLoopId(loop.id);
   };

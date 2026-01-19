@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { Question, Loop, Response, Member } from "../types";
+import { Question, Loop, Response, Member } from "../types.ts";
 
 const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
 

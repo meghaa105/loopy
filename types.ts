@@ -21,6 +21,17 @@ export interface Response {
 export type Frequency = 'weekly' | 'biweekly' | 'monthly';
 export type CollationMode = 'ai' | 'verbatim';
 
+export interface Edition {
+  id: string;
+  publishDate: string;
+  headerImage?: string;
+  introText?: string;
+  narrativeText?: string;
+  responses: Response[];
+  collationMode: CollationMode;
+  issueNumber: number;
+}
+
 export interface Loop {
   id: string;
   name: string;
@@ -30,6 +41,7 @@ export interface Loop {
   members: Member[];
   questions: Question[];
   responses: Response[];
+  editions: Edition[]; // New: Historical storage
   collationMode: CollationMode;
   lastGeneratedAt?: string;
   headerImage?: string;
